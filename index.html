@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aprenem el Codi de Colors de les Resistències</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Estils per a les flashcards (Fase 2) */
+        .perspective { perspective: 1000px; }
+        .preserve-3d { transform-style: preserve-3d; transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1); }
+        .backface-hidden { backface-visibility: hidden; }
+        .rotate-y-180 { transform: rotateY(180deg); }
+        .flipped .preserve-3d { transform: rotateY(180deg); }
+        
+        /* Animacions suaus */
+        .fade-in { animation: fadeIn 0.4s ease-in-out; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Ombra pel text de colors clars */
+        .text-shadow { text-shadow: 1px 1px 2px rgba(0,0,0,0.8); }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col">
+
+    <!-- Capçalera i Navegació -->
+    <header class="bg-indigo-600 text-white shadow-md">
+        <div class="max-w-5xl mx-auto px-4 py-4">
+            <h1 class="text-2xl font-bold text-center">⚡ Codi de Colors de Resistències</h1>
+            <div class="flex justify-center mt-4 space-x-2 md:space-x-4 text-sm md:text-base">
+                <button onclick="canviarFase(1)" id="btn-fase-1" class="px-3 py-2 rounded-lg font-semibold bg-indigo-800 hover:bg-indigo-700 transition">1. Teoria</button>
+                <button onclick="canviarFase(2)" id="btn-fase-2" class="px-3 py-2 rounded-lg font-semibold bg-indigo-500 hover:bg-indigo-700 transition">2. Memorització</button>
+                <button onclick="canviarFase(3)" id="btn-fase-3" class="px-3 py-2 rounded-lg font-semibold bg-indigo-500 hover:bg-indigo-700 transition">3. Quin valor té?</button>
+                <button onclick="canviarFase(4)" id="btn-fase-4" class="px-3 py-2 rounded-lg font-semibold bg-indigo-500 hover:bg-indigo-700 transition">4. Posa-li color</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-5xl mx-auto w-full p-4">
+        
+        <!-- ================= FASE 1: TEORIA ================= -->
+        <section id="fase-1" class="fade-in bg-white p-6 rounded-xl shadow-lg border border-slate-200">
+            <h2 class="text-2xl font-bold text-indigo-700 mb-4">Fase 1: La Taula de Colors</h2>
+            <p class="mb-4 text-lg text-slate-600">Les resistències tenen unes franges de colors (normalment 4) que ens indiquen el seu valor en Ohms (Ω). Així és com es llegeixen:</p>
+            
+            <div class="flex flex-col md:flex-row gap-8 items-center justify-center mb-8">
+                <!-- Dibuix Resistència Explicativa -->
+                <div class="flex items-center justify-center">
+                    <div class="w-12 h-2 bg-gray-400"></div>
+                    <div class="relative w-64 h-20 bg-[#e3cda4] rounded-[15px] border-2 border-slate-700 shadow-sm flex items-center">
+                        <div class="w-5 h-full ml-8 bg-red-600 border-x border-black/10"></div>
+                        <div class="w-5 h-full ml-4 bg-purple-600 border-x border-black/10"></div>
+                        <div class="w-5 h-full ml-4 bg-orange-500 border-x border-black/10"></div>
+                        <div class="flex-grow"></div>
+                        <div class="w-5 h-full mr-8 bg-yellow-400 border-x border-black/10"></div>
+                        
+                        <!-- Etiquetes sota la resistència -->
+                        <div class="absolute -bottom-8 left-6 text-xs font-bold text-slate-500">1a Xifra</div>
+                        <div class="absolute -bottom-8 left-16 text-xs font-bold text-slate-500">2a Xifra</div>
+                        <div class="absolute -bottom-8 left-24 text-xs font-bold text-slate-500">Multiplicador</div>
+                        <div class="absolute -bottom-8 right-6 text-xs font-bold text-slate-500">Tolerància</div>
+                    </div>
+                    <div class="w-12 h-2 bg-gray-400"></div>
+                </div>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-indigo-100 text-indigo-800">
+                            <th class="p-3 border-b-2 border-indigo-200">Color</th>
+                            <th class="p-3 border-b-2 border-indigo-200">1a i 2a Franja (Valor)</th>
+                            <th class="p-3 border-b-2 border-indigo-200">3a Franja (Multiplicador)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="taula-colors">
+                        <!-- S'omple amb JS -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+                <h3 class="font-bold text-blue-800 mb-2">Tolerància (4a franja)</h3>
+                <p>Indica el marge d'error del valor. Els més comuns són: <span class="font-bold text-yellow-600">Or (±5%)</span> i <span class="font-bold text-slate-400">Plata (±10%)</span>.</p>
+            </div>
+
+            <div class="mt-8 flex justify-end">
+                <button onclick="canviarFase(2)" class="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-lg shadow-md transition transform hover:scale-105">Anar a Memoritzar ➔</button>
+            </div>
+        </section>
+
+
+        <!-- ================= FASE 2: FLASHCARDS ================= -->
+        <section id="fase-2" class="fade-in hidden bg-white p-6 rounded-xl shadow-lg border border-slate-200">
+            <h2 class="text-2xl font-bold text-indigo-700 mb-2">Fase 2: Flashcards de Memorització</h2>
+            <p class="mb-6 text-lg text-slate-600">Fes clic sobre la targeta per girar-la i comprovar quin valor representa cada color. Repassa'ls tots abans de jugar!</p>
+            
+            <div class="flex flex-col items-center">
+                <!-- Targeta Activa -->
+                <div class="perspective w-64 h-64 cursor-pointer" onclick="girarFlashcard()">
+                    <div id="flashcard-inner" class="relative w-full h-full preserve-3d">
+                        <!-- Cara Frontal (Color) -->
+                        <div id="flashcard-front" class="absolute w-full h-full backface-hidden bg-white border-4 rounded-2xl shadow-xl flex items-center justify-center text-3xl font-bold uppercase text-shadow transition-colors duration-300">
+                            COLOR
+                        </div>
+                        <!-- Cara Posterior (Valor) -->
+                        <div class="absolute w-full h-full backface-hidden rotate-y-180 bg-slate-800 text-white rounded-2xl shadow-xl flex flex-col items-center justify-center p-4">
+                            <span class="text-xl text-slate-300 mb-2">Com a xifra:</span>
+                            <span id="flashcard-val" class="text-5xl font-bold text-indigo-400 mb-4">0</span>
+                            <span class="text-xl text-slate-300 mb-1">Com a multiplicador:</span>
+                            <span id="flashcard-mult" class="text-2xl font-mono text-green-400">x1</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Controls Flashcards -->
+                <div class="mt-8 flex items-center space-x-6">
+                    <button onclick="prevFlashcard()" class="p-3 bg-slate-200 hover:bg-slate-300 rounded-full transition">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                    </button>
+                    <span id="flashcard-counter" class="text-lg font-bold text-slate-500">1 / 10</span>
+                    <button onclick="nextFlashcard()" class="p-3 bg-slate-200 hover:bg-slate-300 rounded-full transition">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </button>
+                </div>
+            </div>
+
+            <div class="mt-12 flex justify-between">
+                <button onclick="canviarFase(1)" class="px-4 py-2 text-indigo-600 hover:underline">⬅ Tornar a la teoria</button>
+                <button onclick="canviarFase(3)" class="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-lg shadow-md transition transform hover:scale-105">Anar a Jugar! ➔</button>
+            </div>
+        </section>
+
+
+        <!-- ================= FASE 3: ENDEVINA EL VALOR ================= -->
+        <section id="fase-3" class="fade-in hidden bg-white p-6 rounded-xl shadow-lg border border-slate-200">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-bold text-indigo-700">Fase 3: Llegeix la Resistència</h2>
+                <div class="bg-indigo-100 text-indigo-800 px-4 py-2 rounded-lg font-bold text-lg">
+                    Punts: <span id="puntuacio-f3">0</span> / <span id="intents-f3">0</span>
+                </div>
+            </div>
+            <p class="mb-6 text-lg text-slate-600">Mira els colors de la resistència i selecciona el valor correcte de la llista.</p>
+            
+            <!-- Resistència Visual -->
+            <div class="flex items-center justify-center my-8">
+                <div class="w-16 h-3 bg-slate-400 rounded-l-full"></div>
+                <div class="relative w-72 h-24 bg-[#e3cda4] rounded-[15px] border-2 border-slate-700 shadow-sm flex items-center overflow-hidden">
+                    <div id="f3-b1" class="w-6 h-full ml-8 bg-black border-x border-black/20"></div>
+                    <div id="f3-b2" class="w-6 h-full ml-4 bg-black border-x border-black/20"></div>
+                    <div id="f3-b3" class="w-6 h-full ml-4 bg-black border-x border-black/20"></div>
+                    <div class="flex-grow"></div>
+                    <div id="f3-b4" class="w-6 h-full mr-8 bg-yellow-400 border-x border-black/20"></div>
+                </div>
+                <div class="w-16 h-3 bg-slate-400 rounded-r-full"></div>
+            </div>
+
+            <!-- Opcions -->
+            <div id="opcions-f3" class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
+                <!-- S'omple amb JS -->
+            </div>
+            
+            <div id="missatge-f3" class="hidden mt-6 text-center font-bold text-xl py-3 rounded-lg"></div>
+
+            <div class="mt-8 flex justify-center hidden" id="btn-seg-f3-container">
+                <button onclick="generarPreguntaFase3()" class="px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-lg shadow-md transition">Següent Resistència ➔</button>
+            </div>
+        </section>
+
+
+        <!-- ================= FASE 4: POSA-LI COLOR ================= -->
+        <section id="fase-4" class="fade-in hidden bg-white p-6 rounded-xl shadow-lg border border-slate-200">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-bold text-indigo-700">Fase 4: Construeix la Resistència</h2>
+                <div class="bg-indigo-100 text-indigo-800 px-4 py-2 rounded-lg font-bold text-lg">
+                    Punts: <span id="puntuacio-f4">0</span> / <span id="intents-f4">0</span>
+                </div>
+            </div>
+            <p class="mb-6 text-lg text-slate-600">Quin és el codi de colors per a aquesta resistència? Tria'ls als desplegables.</p>
+            
+            <div class="text-center mb-8">
+                <div class="text-sm uppercase tracking-wider text-slate-500 font-bold mb-1">Objectiu:</div>
+                <div id="valor-objectiu-f4" class="text-5xl font-mono font-bold text-slate-800 bg-slate-100 inline-block px-8 py-4 rounded-xl border-2 border-slate-300 shadow-inner">
+                    4.7 kΩ ±5%
+                </div>
+            </div>
+
+            <!-- Resistència Visual Dinàmica per F4 -->
+            <div class="flex items-center justify-center my-8 scale-90 md:scale-100">
+                <div class="w-12 h-3 bg-slate-400 rounded-l-full"></div>
+                <div class="relative w-64 h-20 bg-[#e3cda4] rounded-[15px] border-2 border-slate-700 shadow-sm flex items-center overflow-hidden">
+                    <div id="f4-preview-b1" class="w-5 h-full ml-6 bg-transparent border-x border-black/10 transition-colors duration-300"></div>
+                    <div id="f4-preview-b2" class="w-5 h-full ml-4 bg-transparent border-x border-black/10 transition-colors duration-300"></div>
+                    <div id="f4-preview-b3" class="w-5 h-full ml-4 bg-transparent border-x border-black/10 transition-colors duration-300"></div>
+                    <div class="flex-grow"></div>
+                    <div id="f4-preview-b4" class="w-5 h-full mr-6 bg-transparent border-x border-black/10 transition-colors duration-300"></div>
+                </div>
+                <div class="w-12 h-3 bg-slate-400 rounded-r-full"></div>
+            </div>
+
+            <!-- Desplegables de selecció -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8 bg-slate-50 p-4 rounded-xl border border-slate-200">
+                <div>
+                    <label class="block text-sm font-bold text-slate-600 mb-1">1a Franja</label>
+                    <select id="sel-b1" onchange="actualitzarPreviewFase4()" class="w-full p-2 border border-slate-300 rounded-lg font-bold shadow-sm focus:ring-2 focus:ring-indigo-500 outline-none"></select>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-slate-600 mb-1">2a Franja</label>
+                    <select id="sel-b2" onchange="actualitzarPreviewFase4()" class="w-full p-2 border border-slate-300 rounded-lg font-bold shadow-sm focus:ring-2 focus:ring-indigo-500 outline-none"></select>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-slate-600 mb-1">Multiplicador</label>
+                    <select id="sel-b3" onchange="actualitzarPreviewFase4()" class="w-full p-2 border border-slate-300 rounded-lg font-bold shadow-sm focus:ring-2 focus:ring-indigo-500 outline-none"></select>
+                </div>
+                <div>
+                    <label class="block text-sm font-bold text-slate-600 mb-1">Tolerància</label>
+                    <select id="sel-b4" onchange="actualitzarPreviewFase4()" class="w-full p-2 border border-slate-300 rounded-lg font-bold shadow-sm focus:ring-2 focus:ring-indigo-500 outline-none"></select>
+                </div>
+            </div>
+
+            <div class="mt-6 flex justify-center space-x-4">
+                <button id="btn-comprovar-f4" onclick="comprovarFase4()" class="px-8 py-3 bg-green-600 hover:bg-green-700 text-white font-bold text-lg rounded-lg shadow-md transition">Comprovar Resposta ✓</button>
+                <button id="btn-seg-f4" onclick="generarPreguntaFase4()" class="hidden px-8 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-lg rounded-lg shadow-md transition">Següent ➔</button>
+            </div>
+
+            <div id="missatge-f4" class="hidden mt-6 text-center font-bold text-xl py-3 rounded-lg"></div>
+
+        </section>
+
+    </main>
+
+    <!-- JavaScript Integrat -->
+    <script>
+        // Dades base de colors
+        const colorsData = [
+            { id: 0, name: 'Negre', value: 0, mult: 1, multStr: 'x1 Ω', color: '#1a1a1a', text: 'white' },
+            { id: 1, name: 'Marró', value: 1, mult: 10, multStr: 'x10 Ω', color: '#8B4513', text: 'white' },
+            { id: 2, name: 'Vermell', value: 2, mult: 100, multStr: 'x100 Ω', color: '#DC2626', text: 'white' },
+            { id: 3, name: 'Taronja', value: 3, mult: 1000, multStr: 'x1 kΩ', color: '#F97316', text: 'black' },
+            { id: 4, name: 'Groc', value: 4, mult: 10000, multStr: 'x10 kΩ', color: '#EAB308', text: 'black' },
+            { id: 5, name: 'Verd', value: 5, mult: 100000, multStr: 'x100 kΩ', color: '#16A34A', text: 'white' },
+            { id: 6, name: 'Blau', value: 6, mult: 1000000, multStr: 'x1 MΩ', color: '#2563EB', text: 'white' },
+            { id: 7, name: 'Violeta', value: 7, mult: 10000000, multStr: 'x10 MΩ', color: '#9333EA', text: 'white' },
+            { id: 8, name: 'Gris', value: 8, mult: 100000000, multStr: 'x100 MΩ', color: '#6B7280', text: 'white' },
+            { id: 9, name: 'Blanc', value: 9, mult: 1000000000, multStr: 'x1 GΩ', color: '#F9FAFB', text: 'black', border: true }
+        ];
+
+        const tolData = [
+            { id: 'or', name: 'Or', value: 5, color: '#EAB308' },
+            { id: 'plata', name: 'Plata', value: 10, color: '#9CA3AF' }
+        ];
+
+        // Estat de l'aplicació
+        let flashcardActual = 0;
+        let isFlipped = false;
+        
+        let puntsF3 = 0, intentsF3 = 0, respostaCorrectaF3 = null;
+        let puntsF4 = 0, intentsF4 = 0, respostaCorrectaF4 = null;
+
+        // Inicialització
+        window.onload = () => {
+            generarTaulaTeoria();
+            actualitzarFlashcard();
+            omplirDesplegablesFase4();
+            canviarFase(1);
+        };
+
+        // ================= COMÚ =================
+        function canviarFase(fase) {
+            // Ocultar totes les fases
+            document.querySelectorAll('section[id^="fase-"]').forEach(el => el.classList.add('hidden'));
+            // Resetejar colors botons nav
+            document.querySelectorAll('button[id^="btn-fase-"]').forEach(btn => {
+                btn.classList.remove('bg-indigo-800');
+                btn.classList.add('bg-indigo-500');
+            });
+
+            // Mostrar fase actual
+            document.getElementById(`fase-${fase}`).classList.remove('hidden');
+            document.getElementById(`btn-fase-${fase}`).classList.remove('bg-indigo-500');
+            document.getElementById(`btn-fase-${fase}`).classList.add('bg-indigo-800');
+
+            // Iniciar joc si s'entra a les fases de joc per primer cop
+            if(fase === 3 && intentsF3 === 0) generarPreguntaFase3();
+            if(fase === 4 && intentsF4 === 0) generarPreguntaFase4();
+        }
+
+        function formatValor(b1, b2, multInfo) {
+            let num = (b1 * 10) + b2;
+            let ohmsTotals = num * multInfo.mult;
+            
+            if (ohmsTotals >= 1000000) return (ohmsTotals / 1000000) + ' MΩ';
+            if (ohmsTotals >= 1000) return (ohmsTotals / 1000) + ' kΩ';
+            return ohmsTotals + ' Ω';
+        }
+
+        function obtenirColorHex(id) {
+            return colorsData.find(c => c.id === id).color;
+        }
+
+        // ================= FASE 1: TEORIA =================
+        function generarTaulaTeoria() {
+            const tbody = document.getElementById('taula-colors');
+            colorsData.forEach(c => {
+                const tr = document.createElement('tr');
+                tr.className = "border-b border-slate-200 hover:bg-slate-50";
+                
+                let estilColor = `background-color: ${c.color}; color: ${c.text};`;
+                if(c.border) estilColor += ' border: 1px solid #ccc;';
+
+                tr.innerHTML = `
+                    <td class="p-3">
+                        <span class="inline-block px-3 py-1 rounded shadow-sm font-bold" style="${estilColor}">
+                            ${c.name}
+                        </span>
+                    </td>
+                    <td class="p-3 font-bold text-slate-700">${c.value}</td>
+                    <td class="p-3 font-mono text-slate-600">${c.multStr}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // ================= FASE 2: FLASHCARDS =================
+        function actualitzarFlashcard() {
+            const currentData = colorsData[flashcardActual];
+            const front = document.getElementById('flashcard-front');
+            const val = document.getElementById('flashcard-val');
+            const mult = document.getElementById('flashcard-mult');
+            const counter = document.getElementById('flashcard-counter');
+
+            front.style.backgroundColor = currentData.color;
+            front.style.color = currentData.text;
+            front.innerText = currentData.name;
+            if(currentData.border) front.style.borderColor = '#d1d5db';
+            else front.style.borderColor = currentData.color;
+
+            val.innerText = currentData.value;
+            mult.innerText = currentData.multStr;
+            counter.innerText = `${flashcardActual + 1} / 10`;
+
+            // Si està girada, la tornem a posar bé sense animació per al següent color
+            const container = document.getElementById('flashcard-inner').parentElement;
+            if (isFlipped) {
+                container.classList.remove('flipped');
+                isFlipped = false;
+            }
+        }
+
+        function girarFlashcard() {
+            const container = document.getElementById('flashcard-inner').parentElement;
+            container.classList.toggle('flipped');
+            isFlipped = !isFlipped;
+        }
+
+        function nextFlashcard() {
+            flashcardActual = (flashcardActual + 1) % 10;
+            actualitzarFlashcard();
+        }
+
+        function prevFlashcard() {
+            flashcardActual = (flashcardActual - 1 + 10) % 10;
+            actualitzarFlashcard();
+        }
+
+        // ================= FASE 3: JOC DE LLEGIR =================
+        function generarPreguntaFase3() {
+            // Amagar missatges previs
+            document.getElementById('missatge-f3').classList.add('hidden');
+            document.getElementById('btn-seg-f3-container').classList.add('hidden');
+            document.getElementById('opcions-f3').innerHTML = '';
+
+            // Generar resistència aleatòria
+            // Per evitar valors estranys començant per 0 per als de l'ESO, B1 serà de 1 a 9
+            const b1 = Math.floor(Math.random() * 9) + 1; 
+            const b2 = Math.floor(Math.random() * 10);
+            const b3 = Math.floor(Math.random() * 7); // Fins a x1M per no posar Giga Ohms
+            const tol = Math.random() > 0.5 ? tolData[0] : tolData[1];
+
+            // Pintar resistència
+            document.getElementById('f3-b1').style.backgroundColor = obtenirColorHex(b1);
+            document.getElementById('f3-b2').style.backgroundColor = obtenirColorHex(b2);
+            document.getElementById('f3-b3').style.backgroundColor = obtenirColorHex(b3);
+            document.getElementById('f3-b4').style.backgroundColor = tol.color;
+
+            const correctValueStr = formatValor(b1, b2, colorsData[b3]) + ` ±${tol.value}%`;
+            respostaCorrectaF3 = correctValueStr;
+
+            // Generar respostes falses properes
+            let opcions = [correctValueStr];
+            while(opcions.length < 4) {
+                let fakeB1 = Math.max(1, Math.min(9, b1 + (Math.floor(Math.random()*3)-1)));
+                let fakeB2 = Math.max(0, Math.min(9, b2 + (Math.floor(Math.random()*5)-2)));
+                let fakeB3 = Math.max(0, Math.min(6, b3 + (Math.floor(Math.random()*3)-1)));
+                
+                let fakeVal = formatValor(fakeB1, fakeB2, colorsData[fakeB3]) + ` ±${tol.value}%`;
+                if(!opcions.includes(fakeVal)) {
+                    opcions.push(fakeVal);
+                }
+            }
+
+            // Barrejar opcions
+            opcions.sort(() => Math.random() - 0.5);
+
+            // Pintar botons d'opcions
+            const container = document.getElementById('opcions-f3');
+            opcions.forEach(op => {
+                const btn = document.createElement('button');
+                btn.className = "w-full py-4 px-6 bg-slate-100 hover:bg-indigo-100 border-2 border-slate-300 hover:border-indigo-500 rounded-xl font-mono text-xl font-bold text-slate-800 transition transform hover:scale-105 active:scale-95";
+                btn.innerText = op;
+                btn.onclick = () => comprovarRespostaFase3(op, btn);
+                container.appendChild(btn);
+            });
+        }
+
+        function comprovarRespostaFase3(respostaUsuari, btnElement) {
+            // Desactivar botons
+            const botons = document.getElementById('opcions-f3').querySelectorAll('button');
+            botons.forEach(b => b.disabled = true);
+
+            intentsF3++;
+            const msgBox = document.getElementById('missatge-f3');
+            msgBox.classList.remove('hidden', 'bg-green-100', 'text-green-800', 'bg-red-100', 'text-red-800');
+
+            if (respostaUsuari === respostaCorrectaF3) {
+                puntsF3++;
+                btnElement.classList.replace('bg-slate-100', 'bg-green-500');
+                btnElement.classList.replace('text-slate-800', 'text-white');
+                msgBox.classList.add('bg-green-100', 'text-green-800');
+                msgBox.innerText = "🎉 Correcte! Molt bé.";
+            } else {
+                btnElement.classList.replace('bg-slate-100', 'bg-red-500');
+                btnElement.classList.replace('text-slate-800', 'text-white');
+                
+                // Buscar i ressaltar la correcta
+                botons.forEach(b => {
+                    if(b.innerText === respostaCorrectaF3) {
+                        b.classList.replace('bg-slate-100', 'bg-green-200');
+                        b.classList.replace('border-slate-300', 'border-green-500');
+                    }
+                });
+
+                msgBox.classList.add('bg-red-100', 'text-red-800');
+                msgBox.innerText = `❌ Incorrecte. El valor era ${respostaCorrectaF3}`;
+            }
+
+            // Actualitzar punts i mostrar botó següent
+            document.getElementById('puntuacio-f3').innerText = puntsF3;
+            document.getElementById('intents-f3').innerText = intentsF3;
+            document.getElementById('btn-seg-f3-container').classList.remove('hidden');
+        }
+
+        // ================= FASE 4: JOC DE CONSTRUIR =================
+        function omplirDesplegablesFase4() {
+            const b1 = document.getElementById('sel-b1');
+            const b2 = document.getElementById('sel-b2');
+            const b3 = document.getElementById('sel-b3');
+            const b4 = document.getElementById('sel-b4');
+
+            // Netejar
+            [b1, b2, b3, b4].forEach(el => el.innerHTML = '<option value="">-- Tria --</option>');
+
+            colorsData.forEach(c => {
+                let opt = `<option value="${c.id}" style="background-color:${c.color}; color:${c.text};">${c.name}</option>`;
+                if(c.id > 0) b1.innerHTML += opt; // B1 no pot ser 0
+                b2.innerHTML += opt;
+                if(c.id <= 6) b3.innerHTML += opt; // Llimitem multiplicador
+            });
+
+            tolData.forEach(t => {
+                b4.innerHTML += `<option value="${t.id}" style="background-color:${t.color}; color:black;">${t.name} (±${t.value}%)</option>`;
+            });
+        }
+
+        function generarPreguntaFase4() {
+            // Reset UI
+            document.getElementById('missatge-f4').classList.add('hidden');
+            document.getElementById('btn-comprovar-f4').classList.remove('hidden');
+            document.getElementById('btn-seg-f4').classList.add('hidden');
+            
+            // Buidar selects i colors de la resistència
+            ['sel-b1', 'sel-b2', 'sel-b3', 'sel-b4'].forEach(id => {
+                document.getElementById(id).value = "";
+                document.getElementById(id).style.backgroundColor = "white";
+                document.getElementById(id).style.color = "black";
+            });
+            ['b1', 'b2', 'b3', 'b4'].forEach(id => {
+                document.getElementById(`f4-preview-${id}`).style.backgroundColor = "transparent";
+            });
+
+            // Generar valors objectiu
+            const b1Id = Math.floor(Math.random() * 9) + 1; 
+            const b2Id = Math.floor(Math.random() * 10);
+            const b3Id = Math.floor(Math.random() * 7); 
+            const tol = Math.random() > 0.5 ? tolData[0] : tolData[1];
+
+            respostaCorrectaF4 = {
+                b1: b1Id.toString(),
+                b2: b2Id.toString(),
+                b3: b3Id.toString(),
+                b4: tol.id
+            };
+
+            const objectiuStr = formatValor(b1Id, b2Id, colorsData[b3Id]) + ` ±${tol.value}%`;
+            document.getElementById('valor-objectiu-f4').innerText = objectiuStr;
+        }
+
+        function actualitzarPreviewFase4() {
+            // Actualitza els colors de la resistència visual segons el que tria l'usuari
+            const val1 = document.getElementById('sel-b1').value;
+            const val2 = document.getElementById('sel-b2').value;
+            const val3 = document.getElementById('sel-b3').value;
+            const val4 = document.getElementById('sel-b4').value;
+
+            const color1 = val1 !== "" ? obtenirColorHex(parseInt(val1)) : "transparent";
+            const color2 = val2 !== "" ? obtenirColorHex(parseInt(val2)) : "transparent";
+            const color3 = val3 !== "" ? obtenirColorHex(parseInt(val3)) : "transparent";
+            const color4 = val4 !== "" ? tolData.find(t=>t.id===val4).color : "transparent";
+
+            document.getElementById('f4-preview-b1').style.backgroundColor = color1;
+            document.getElementById('f4-preview-b2').style.backgroundColor = color2;
+            document.getElementById('f4-preview-b3').style.backgroundColor = color3;
+            document.getElementById('f4-preview-b4').style.backgroundColor = color4;
+
+            // Actualitzar els fons dels selects perquè quedi bonic
+            ['sel-b1', 'sel-b2', 'sel-b3'].forEach(id => {
+                const el = document.getElementById(id);
+                if(el.value !== "") {
+                    const cInfo = colorsData.find(c => c.id === parseInt(el.value));
+                    el.style.backgroundColor = cInfo.color;
+                    el.style.color = cInfo.text;
+                }
+            });
+            if(val4 !== "") {
+                const el = document.getElementById('sel-b4');
+                el.style.backgroundColor = tolData.find(t=>t.id===val4).color;
+                el.style.color = 'black';
+            }
+        }
+
+        function comprovarFase4() {
+            const v1 = document.getElementById('sel-b1').value;
+            const v2 = document.getElementById('sel-b2').value;
+            const v3 = document.getElementById('sel-b3').value;
+            const v4 = document.getElementById('sel-b4').value;
+
+            if(v1==="" || v2==="" || v3==="" || v4==="") {
+                alert("Si us plau, selecciona tots els colors abans de comprovar.");
+                return;
+            }
+
+            intentsF4++;
+            const msgBox = document.getElementById('missatge-f4');
+            msgBox.classList.remove('hidden', 'bg-green-100', 'text-green-800', 'bg-red-100', 'text-red-800');
+
+            if(v1 === respostaCorrectaF4.b1 && v2 === respostaCorrectaF4.b2 && v3 === respostaCorrectaF4.b3 && v4 === respostaCorrectaF4.b4) {
+                puntsF4++;
+                msgBox.classList.add('bg-green-100', 'text-green-800');
+                msgBox.innerText = "🎉 Impressionant! Has encertat tots els colors.";
+            } else {
+                msgBox.classList.add('bg-red-100', 'text-red-800');
+                
+                // Crear nom de colors correctes
+                const c1 = colorsData.find(c => c.id == respostaCorrectaF4.b1).name;
+                const c2 = colorsData.find(c => c.id == respostaCorrectaF4.b2).name;
+                const c3 = colorsData.find(c => c.id == respostaCorrectaF4.b3).name;
+                const c4 = tolData.find(t => t.id == respostaCorrectaF4.b4).name;
+                
+                msgBox.innerHTML = `❌ Gairebé! La combinació correcta era:<br><span class="font-bold text-slate-800">${c1} - ${c2} - ${c3} - ${c4}</span>`;
+            }
+
+            document.getElementById('puntuacio-f4').innerText = puntsF4;
+            document.getElementById('intents-f4').innerText = intentsF4;
+            
+            // Canviar botons
+            document.getElementById('btn-comprovar-f4').classList.add('hidden');
+            document.getElementById('btn-seg-f4').classList.remove('hidden');
+        }
+
+    </script>
+</body>
+</html>
